@@ -31,9 +31,10 @@ describe('GET /api/logs', () => {
   afterAll(async () => {
     await mongoose.connection.close();
   });
-
   it('should return logs with default limit', async () => {
-    const res = await request(app).get('/api/logs');
+    const res = await request(app)
+      .get('/api/logs')
+      .set('Authorization', 'Bearer testtoken');
     expect(res.statusCode).toBe(200);
     expect(res.body.success).toBe(true);
     expect(Array.isArray(res.body.logs)).toBe(true);
@@ -41,15 +42,24 @@ describe('GET /api/logs', () => {
   });
 
   it('should return logs with specified limit and skip', async () => {
-    const res = await request(app).get('/api/logs?limit=1&skip=1');
+    const res = await request(app)
+      .get('/api/logs?limit=1&skip=1')
+      .set('Authorization', 'Bearer testtoken');
     expect(res.statusCode).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.logs.length).toBe(1);
   });
-
   it('should handle invalid limit and skip gracefully', async () => {
-    const res = await request(app).get('/api/logs?limit=abc&skip=xyz');
+    const res = await request(app)
+      .get('/api/logs?limit=abc&skip=xyz')
+      .set('Authorization', 'Bearer testtoken');
     expect(res.statusCode).toBe(200);
     expect(res.body.success).toBe(true);
+  });
+  
+  it('should reject requests without authentication', async () => {
+    const res = await request(app).get('/api/logs');
+    expect(res.statusCode).toBe(401);
+    expect(res.body.success).toBe(false);
   });
 });

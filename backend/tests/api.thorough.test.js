@@ -159,11 +159,10 @@ describe('Thorough Testing for /api/logs', () => {
 
 // Additional tests for alert system integration and security can be added similarly with mocks/stubs.
 
-// We recommend installing an extension to run jest tests.
-  await mongoose.connection.close();
-});
+// Note: There was a duplicate afterAll and describe block below that was causing syntax errors.
+// Those have been removed to fix the test file.
 
-describe('Thorough Testing for /api/users', () => {
+describe('Thorough Testing for Additional User Cases', () => {
   it('should reject invalid phone number format', async () => {
     const res = await request(app)
       .post('/api/users')
@@ -228,7 +227,6 @@ describe('Thorough Testing for /api/upload', () => {
     expect(res.statusCode).toBe(400);
     expect(res.body.success).toBe(false);
   });
-
   it('should reject location with missing longitude', async () => {
     const res = await request(app)
       .post('/api/upload')

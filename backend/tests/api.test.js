@@ -58,7 +58,9 @@ describe('POST /api/upload', () => {
       .post('/api/upload')
       .send({
         gasLevel: 50,
-        location: { lat: 12.9716, lng: 77.5946 }
+        latitude: 12.9716, 
+        longitude: 77.5946,
+        timestamp: new Date().toISOString()
       });
     expect(res.statusCode).toEqual(200);
     expect(res.body.success).toBe(true);
@@ -70,12 +72,13 @@ describe('POST /api/upload', () => {
       .post('/api/upload')
       .send({
         gasLevel: 150,
-        location: { lat: 12.9716, lng: 77.5946 }
+        latitude: 12.9716, 
+        longitude: 77.5946,
+        timestamp: new Date().toISOString()
       });
     expect(res.statusCode).toEqual(200);
     expect(res.body.success).toBe(true);
   });
-
   it('should return 400 for missing fields', async () => {
     const res = await request(app)
       .post('/api/upload')
@@ -84,10 +87,15 @@ describe('POST /api/upload', () => {
     expect(res.body.success).toBe(false);
   });
 
-  it('should return 400 for invalid location format', async () => {
+  it('should return 400 for invalid data format', async () => {
     const res = await request(app)
       .post('/api/upload')
-      .send({ gasLevel: 50, location: { lat: 12.9716, lng: 77.5946 } });
+      .send({ 
+        gasLevel: 50, 
+        latitude: "invalid", 
+        longitude: 77.5946,
+        timestamp: new Date().toISOString()
+      });
     expect(res.statusCode).toEqual(400);
     expect(res.body.success).toBe(false);
   });
